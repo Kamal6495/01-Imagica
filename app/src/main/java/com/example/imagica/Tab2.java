@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Tab2 extends Fragment {
     private static final String TAG = "Tab2";
-    private static final int LIMIT = 30;
+    private static final int LIMIT = 10;
     //  private Context context;
     RetrofitClient retrofitClient;
     Retrofit retrofit;

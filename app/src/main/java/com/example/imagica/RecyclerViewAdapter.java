@@ -57,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
        // Log.d(TAG, "onBindViewHolder: " + photoList.get(position).getUrls().getFull());
         holder.textView.setText(photoList.get(position).getDescription());
         Glide.with(context).asBitmap()
-                .load(photoList.get(position).getUrls().getRegular())
+                .load(photoList.get(position).getUrls().getSmall())
                 .apply(new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE))
                 .into(holder.imageView);
 
