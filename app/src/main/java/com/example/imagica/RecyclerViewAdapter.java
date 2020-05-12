@@ -54,7 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: " + photoList.get(position).getUrls().getFull());
+       // Log.d(TAG, "onBindViewHolder: " + photoList.get(position).getUrls().getFull());
         holder.textView.setText(photoList.get(position).getDescription());
         Glide.with(context).asBitmap()
                 .load(photoList.get(position).getUrls().getRegular())
