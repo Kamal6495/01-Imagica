@@ -53,7 +53,7 @@ public class Tab2 extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RecyclerViewAdapter(new ArrayList<Photo>(), getActivity());
         recyclerView.setAdapter(adapter);
-        setupRetrofit();
+
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -62,6 +62,7 @@ public class Tab2 extends Fragment {
 
 
         });
+        setupRetrofit();
 
 
 
