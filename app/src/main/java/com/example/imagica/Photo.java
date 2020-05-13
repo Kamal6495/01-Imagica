@@ -14,6 +14,29 @@ public class Photo implements Serializable {
     @SerializedName("id")
     @Expose
     private String id;
+    @SerializedName("color")
+    @Expose
+    private String color;
+   /* @SerializedName("current_user_collections")
+    @Expose
+    private Current_user_collections current_user_collections;
+
+    public Current_user_collections getCurrent_user_collections() {
+        return current_user_collections;
+    }
+
+    public void setCurrent_user_collections(Current_user_collections current_user_collections) {
+        this.current_user_collections = current_user_collections;
+    }*/
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @SerializedName("width")
     @Expose
     private Integer width;

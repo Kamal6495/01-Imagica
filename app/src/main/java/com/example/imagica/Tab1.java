@@ -1,10 +1,12 @@
 package com.example.imagica;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,15 +26,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Tab1 extends Fragment {
     private static final String TAG = "Tab1";
-    private static final int LIMIT = 10;
+    private static final int LIMIT = 30;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
-    private EndlessRecyclerViewScrollListener scrollListener;
     private int page = 1;
-    //  private Context context;
     private RetrofitClient retrofitClient;
     private Retrofit retrofit;
     private String ID = "1580860";
+    private boolean isLoading = false;
+    private List<Photo> photos = new ArrayList<>();
+    private int PhotosSize = 0;
+    private List<Photo> temp = new ArrayList<>();
 
     public Tab1() {
     }
@@ -51,53 +55,50 @@ public class Tab1 extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RecyclerViewAdapter(new ArrayList<Photo>(), getActivity());
         recyclerView.setAdapter(adapter);
+        setupRetrofit();
 
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 setupRetrofit();
             }
-
-
         });
-        setupRetrofit();
-
 
     }
 
+    //Parsing Json Objects
     private void setupRetrofit() {
-
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new AuthenticationInterceptor()).build();
-
         retrofit = new Retrofit.Builder()
                 .baseUrl(AceessKey_Constants.BASE_URL_UNSPLASH)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         retrofitClient = retrofit.create(RetrofitClient.class);
-        Log.d(TAG, "stupRetroFit: " + ID);
         Call<List<Photo>> getPhotos = retrofitClient.getCollection(ID, page, LIMIT, AceessKey_Constants.IMAGE_ORINTATION);
-        //Log.d(TAG, "stupRetroFit: ");
+
         getPhotos.enqueue(new Callback<List<Photo>>() {
             @Override
             public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-                //Log.d(TAG, "onResponse: " + response.body().get(1).getCurrent_user_collections().getTitle());
-                List<Photo> photos = response.body();
-                {
-                    page++;
-                    adapter.addPhotos(photos);
-                    recyclerView.setAdapter(adapter);
+                photos = response.body();
+                PhotosSize += photos.size();
+                page++;
+                adapter.addPhotos(photos);
+                adapter.notifyDataSetChanged();
+                // Don't use setAdapter(adapter) Not Used So as it changes data from start
+                // recyclerView.setAdapter(adapter);
 
-                }
 
             }
 
             @Override
             public void onFailure(Call<List<Photo>> call, Throwable t) {
                 Log.d(TAG, "onFailure: ");
+                Toast.makeText(getActivity(), "Image Loading Failed Try After Some time ", Toast.LENGTH_SHORT).show();
             }
         });
 
 
     }
+
 }

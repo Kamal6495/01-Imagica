@@ -10,12 +10,13 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#85B132"
+        android:background="#3C5A02"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:nestedScrollingEnabled="true"
-        app:tabSelectedTextColor="#012591"
-        app:tabTextColor="#000" />
+        android:scrollbarStyle="insideInset"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:tabSelectedTextColor="#A5BBFD"
+        app:tabTextColor="#FFFFFF" />
 
 
     <androidx.viewpager.widget.ViewPager
