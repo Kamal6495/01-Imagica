@@ -34,6 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
     private List<Photo> photoList;
     private Context context;
+    private int pos;
 
     RecyclerViewAdapter(List<Photo> photoList, Context context) {
         this.photoList = photoList;
@@ -60,7 +61,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        pos = position;
         holder.textView.setText(photoList.get(position).getDescription());
         Glide.with(context).asBitmap()
                 .load(photoList.get(position).getUrls().getRegular())
@@ -68,6 +69,52 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         String color = photoList.get(position).getColor();
         color = color.substring(1);
         holder.cardView.setCardBackgroundColor(Integer.parseInt(color, 16));
+
+        Glide.with(context).asBitmap().load(photoList.get(position).getUrls().getRegular())
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        saveImage(resource);
+                    }
+                });
+
+
+
+    }
+
+    private String saveImage(Bitmap image) {
+        String savedImagePath = null;
+
+        String imageFileName = "JPEG_" + "FILE_NAME_" + pos + ".jpg";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                + "/Imagica");
+        boolean success = true;
+        if (!storageDir.exists()) {
+            success = storageDir.mkdirs();
+        }
+        if (success) {
+            File imageFile = new File(storageDir, imageFileName);
+            savedImagePath = imageFile.getAbsolutePath();
+            try {
+                OutputStream fOut = new FileOutputStream(imageFile);
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Add the image to the system gallery
+            galleryAddPic(savedImagePath);
+            Toast.makeText(context, "IMAGE SAVED", Toast.LENGTH_LONG).show();
+        }
+        return savedImagePath;
+    }
+
+    private void galleryAddPic(String imagePath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(imagePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
 
     }
 
